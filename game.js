@@ -105,6 +105,11 @@ function create() {
 }
 
 function update() {
+    if (gameOver)
+    {
+        return;
+    }
+
     if (cursors.left.isDown) {
         player.setVelocityX(-160);
 
@@ -128,10 +133,6 @@ function update() {
 
 function collectStar(player, star) {
     star.disableBody(true, true);
-}
-
-function collectStar(player, star) {
-    star.disableBody(true, true);
 
     score += 10;
     scoreText.setText('Score: ' + score);
@@ -149,7 +150,7 @@ function collectStar(player, star) {
         bomb.setBounce(1);
         bomb.setCollideWorldBounds(true);
         bomb.setVelocity(Phaser.Math.Between(-200, 200), 20);
-
+        bomb.allowGravity = false;
     }
 }
 
