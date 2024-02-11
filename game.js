@@ -44,6 +44,7 @@ function preload() {
     this.load.audio('boom', 'assets/boom.mp3');
     this.load.audio('death', 'assets/death.mp3');
     this.load.audio('jump', 'assets/jump.mp3');
+    this.load.audio('coin', 'assets/coin.mp3');
 }
 
 function create() {
@@ -113,6 +114,7 @@ function create() {
     boomSound = this.sound.add('boom');
     deathSound = this.sound.add('death');
     jumpSound = this.sound.add('jump');
+    coinSound = this.sound.add('coin');
 }
 
 function update() {
@@ -144,6 +146,8 @@ function update() {
 }
 
 function collectStar(player, star) {
+    coinSound.play();
+
     star.disableBody(true, true);
 
     score += 1;
