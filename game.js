@@ -6,6 +6,8 @@ var bombs;
 
 var score = 0;
 var scoreText;
+var HighScore = 0;
+var HighScoreText;
 
 var gameOver = false;
 
@@ -34,6 +36,7 @@ function preload() {
     this.load.image('ground', 'assets/platform.png');
     this.load.image('star', 'assets/star.png');
     this.load.image('bomb', 'assets/bomb.png');
+    this.load.image('reset', 'assets/reset.png');
     this.load.spritesheet('dude',
         'assets/dude.png',
         { frameWidth: 32, frameHeight: 48 }
@@ -98,7 +101,8 @@ function create() {
     this.physics.add.collider(stars, platforms);
     this.physics.add.overlap(player, stars, collectStar, null, this);
 
-    scoreText = this.add.text(16, 16, 'score: 0', { fontSize: '32px', fill: '#000' });
+    scoreText = this.add.text(16, 16, 'Score: 0', { fontSize: '32px', fill: '#000' });
+    HighScoreText = this.add.text(500, 16, ('High score: ' + HighScore), { fontSize: '32px', fill: '#000' });
 
     bombs = this.physics.add.group();
 
@@ -142,8 +146,11 @@ function update() {
 function collectStar(player, star) {
     star.disableBody(true, true);
 
-    score += 10;
+    score += 1;
     scoreText.setText('Score: ' + score);
+    if (HighScore < score) {
+        HighScore = score;
+    }
 
     if (stars.countActive(true) === 0) {
         stars.children.iterate(function (child) {
@@ -173,4 +180,21 @@ function hitBomb(player, bomb) {
     player.anims.play('turn');
 
     gameOver = true;
+    
+    var self = this;
+
+    var resetButton = this.add.image(400, 450, 'reset').setInteractive();
+    resetButton.setScale(1);
+
+    resetButton.on('pointerdown', function () {
+        self.physics.resume();
+        player.disableBody(true, true);
+        player = self.physics.add.sprite(100, 450, 'dude');
+        player.setBounce(0.2);
+        player.setCollideWorldBounds(true);
+        gameOver = false;
+        self.scene.restart();
+        score = 0;
+
+    });
 }
