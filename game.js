@@ -38,6 +38,9 @@ function preload() {
         'assets/dude.png',
         { frameWidth: 32, frameHeight: 48 }
     );
+    this.load.audio('boom', 'assets/boom.mp3');
+    this.load.audio('death', 'assets/death.mp3');
+    this.load.audio('jump', 'assets/jump.mp3');
 }
 
 function create() {
@@ -102,6 +105,10 @@ function create() {
     this.physics.add.collider(bombs, platforms);
 
     this.physics.add.collider(player, bombs, hitBomb, null, this);
+
+    boomSound = this.sound.add('boom');
+    deathSound = this.sound.add('death');
+    jumpSound = this.sound.add('jump');
 }
 
 function update() {
@@ -128,6 +135,7 @@ function update() {
 
     if (cursors.up.isDown && player.body.touching.down) {
         player.setVelocityY(-330);
+        jumpSound.play();
     }
 }
 
@@ -158,6 +166,9 @@ function hitBomb(player, bomb) {
     this.physics.pause();
 
     player.setTint(0xff0000);
+    
+    deathSound.play();
+    boomSound.play();
 
     player.anims.play('turn');
 
