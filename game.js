@@ -118,8 +118,7 @@ function create() {
 }
 
 function update() {
-    if (gameOver)
-    {
+    if (gameOver) {
         return;
     }
 
@@ -152,6 +151,15 @@ function collectStar(player, star) {
 
     score += 1;
     scoreText.setText('Score: ' + score);
+
+    var x = (player.x < 400) ? Phaser.Math.Between(400, 800) : Phaser.Math.Between(0, 400);
+
+    var bomb = bombs.create(x, 16, 'bomb');
+    bomb.setBounce(1);
+    bomb.setCollideWorldBounds(true);
+    bomb.setVelocity(Phaser.Math.Between(-200, 200), 20);
+    bomb.allowGravity = false;
+
     if (HighScore < score) {
         HighScore = score;
     }
@@ -162,14 +170,6 @@ function collectStar(player, star) {
             child.enableBody(true, child.x, 0, true, true);
 
         });
-
-        var x = (player.x < 400) ? Phaser.Math.Between(400, 800) : Phaser.Math.Between(0, 400);
-
-        var bomb = bombs.create(x, 16, 'bomb');
-        bomb.setBounce(1);
-        bomb.setCollideWorldBounds(true);
-        bomb.setVelocity(Phaser.Math.Between(-200, 200), 20);
-        bomb.allowGravity = false;
     }
 }
 
@@ -177,14 +177,14 @@ function hitBomb(player, bomb) {
     this.physics.pause();
 
     player.setTint(0xff0000);
-    
+
     deathSound.play();
     boomSound.play();
 
     player.anims.play('turn');
 
     gameOver = true;
-    
+
     var self = this;
 
     var resetButton = this.add.image(400, 450, 'reset').setInteractive();
